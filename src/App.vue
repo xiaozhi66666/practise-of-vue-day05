@@ -1,64 +1,112 @@
 <template>
-  <div>
-    <Dogs :arr="list" @select="selectFn"></Dogs>
-    <div>你喜欢的狗如下：{{ dogName }}</div>
+  <div id="all">
+    <table border="1" width="700" style="border-collapse: collapse">
+      <caption>
+        购物车
+      </caption>
+      <thead>
+        <tr>
+          <th><input type="checkbox" v-model="isAll" /> <span>全选</span></th>
+          <th>名称</th>
+          <th>价格</th>
+          <th>数量</th>
+          <th>总价</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <Tr
+          v-for="(obj, index) in goodList"
+          :key="index"
+          :obj="obj"
+          @isSelect="isSelectFn"
+        ></Tr>
+      </tbody>
+      <tfoot>
+        <tr v-if="goodList.length !== 0">
+          <td>合计:</td>
+          <td colspan="5">{{ allPrice }}</td>
+        </tr>
+        <tr v-else class="over">
+          <td colspan="6">"抱歉！已经没有任何数据了"</td>
+        </tr>
+      </tfoot>
+    </table>
   </div>
 </template>
 
+
 <script>
-import Dogs from "@/components/dogs.vue";
+import Tr from "@/components/Tr.vue";
+
 export default {
-  name: "Vuedemo05App",
-  components: {
-    Dogs,
-  },
+  components: { Tr },
   data() {
     return {
-      list: [
+      goodList: [
         {
-          dogImgUrl:
-            "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.pig66.com%2Fuploadfile%2F2021%2F0223%2F20210223075016116.jpg&refer=http%3A%2F%2Fwww.pig66.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659425785&t=82ee8b47d09e770721232b0c8a92ca66",
-          dogName: "博美",
+          name: "诸葛亮",
+          price: 1000,
+          num: 0,
+          checked: false,
         },
         {
-          dogImgUrl:
-            "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.zhuanboke.cn%2Fwp-content%2Fuploads%2F2021%2F09%2F20210925_614e86b93ec1e.jpg&refer=http%3A%2F%2Fwww.zhuanboke.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659425423&t=93b39e09c10bdf594e125b5da38cbad6",
-          dogName: "泰迪",
+          name: "蔡文姬",
+          price: 1500,
+          num: 0,
+          checked: false,
         },
         {
-          dogImgUrl:
-            "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn%2Fw640h809%2F20180211%2F1a16-fyrkuxt4076995.jpg&refer=http%3A%2F%2Fn.sinaimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659425501&t=0cfb1b442248583e92b399369752da95",
-          dogName: "金毛",
+          name: "妲己",
+          price: 2000,
+          num: 0,
+          checked: false,
         },
         {
-          dogImgUrl:
-            "https://pic1.zhimg.com/80/v2-7ba4342e6fedb9c5f3726eb0888867da_1440w.jpg?source=1940ef5c",
-          dogName: "哈士奇",
-        },
-        {
-          dogImgUrl:
-            "https://img0.baidu.com/it/u=143654580,2727053860&fm=253&fmt=auto&app=138&f=JPEG?w=493&h=313",
-          dogName: "阿拉斯加",
-        },
-        {
-          dogImgUrl:
-            "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn21%2F622%2Fw528h894%2F20180711%2F9b55-hfefkqq4964458.png&refer=http%3A%2F%2Fn.sinaimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659425744&t=8c97931bc3c61e9e5c46be93ca0d0d5e",
-          dogName: "萨摩耶",
+          name: "鲁班",
+          price: 2200,
+          num: 0,
+          checked: false,
         },
       ],
-      dogName: "",
     };
   },
-
-  mounted() {},
-
+  computed: {
+    isAll: {
+      set(val) {
+        this.goodList.forEach((item) => {
+          item.checked = val;
+        });
+      },
+      get() {
+        return this.goodList.length == 0
+          ? false
+          : this.goodList.every((item) => item.checked == true);
+      },
+    },
+    allPrice() {
+      const arr = this.goodList.filter((item) => item.checked);
+      return arr.reduce((sum, item) => (sum += item.num * item.price), 0);
+    },
+  },
   methods: {
-    selectFn(val) {
-      this.dogName = val;
+    isSelectFn(name) {
+      const index = this.goodList.findIndex((item) => item.name == name);
+      this.goodList.splice(index, 1);
     },
   },
 };
 </script>
 
-<style  scoped>
+<style>
+#all {
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+table {
+  text-align: center;
+}
+.over {
+  height: 100px;
+}
 </style>

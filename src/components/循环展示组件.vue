@@ -1,7 +1,6 @@
 <template>
   <div>
-    <Dogs :arr="list" @select="selectFn"></Dogs>
-    <div>你喜欢的狗如下：{{ dogName }}</div>
+    <Dogs v-for="(item, index) in list" :key="index" :obj="item"></Dogs>
   </div>
 </template>
 
@@ -46,17 +45,12 @@ export default {
           dogName: "萨摩耶",
         },
       ],
-      dogName: "",
     };
   },
 
   mounted() {},
 
-  methods: {
-    selectFn(val) {
-      this.dogName = val;
-    },
-  },
+  methods: {},
 };
 </script>
 
